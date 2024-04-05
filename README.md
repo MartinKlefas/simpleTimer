@@ -21,5 +21,12 @@ If you've got code that you're going to repeat in a loop of any kind you can get
         ## Some Other Code
         t.stop_looped("timer2")
 
+## Using a "with" block
+The last method of timing some code is to use a with block - which is basically just a style choice in this context, and implements the same basic start and stop functions automatically:
+
+    with timer.start("my with task"):
+        ## Some Code
+        ## some more code
+
 ## Report generation
 At the end of your code call `.report()` and it'll retirn a report to the string - so call `print(t.report()) ` if you want it printing to screen.
