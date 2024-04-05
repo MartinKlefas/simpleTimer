@@ -4,7 +4,7 @@ I just needed the world's simplest python code timer. Basically no learning curv
 ## Basic Operation
 To start a timer for a block of code, instantiate your timer, then call `.start("name")`. when your code block is finished call `.stop("name")`:
 
-    t = simpleTimer()
+    t = simpleTimer.Timer()
     t.start("my_time")
     ## SOME CODE
     t.stop("my_time")
@@ -12,7 +12,7 @@ To start a timer for a block of code, instantiate your timer, then call `.start(
 ## Looped Operation
 If you've got code that you're going to repeat in a loop of any kind you can get an average time per loop with `start_looped()` and `stop_looped()`:
 
-    t = simpleTimer()()
+    t = simpleTimer.Timer()
     for i in range(10):
         t.start_looped("timer1")
         ## SOME CODE
@@ -25,7 +25,8 @@ If you've got code that you're going to repeat in a loop of any kind you can get
 ## Using a "with" block
 The last method of timing some code is to use a with block - which is basically just a style choice in this context, and implements the same basic start and stop functions automatically:
 
-    with timer.start("my with task"):
+    t = simpleTimer.Timer()
+    with t.start("my with task"):
         ## Some Code
         ## some more code
 
