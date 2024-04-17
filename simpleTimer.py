@@ -66,7 +66,31 @@ class Timer:
                 avg_time = sum(times) / len(times)
                 retval+=f'There were {len(times)} repeats of {event_name}, average duration was: {avg_time} seconds\n'
         return retval
+        def reportCSV(self):
+        listdictresults = []
+        for event_name in self.start_times:
+            elapsed_time = self.get_elapsed_time(event_name)
+            listdictresults.append({"event_name":event_name, "repeats":1, "Time",elapsed_time}
+                
+        for event_name in self.loop_times:
+            times = self.loop_times.get(event_name)
+            if times:
+                avg_time = sum(times) / len(times)
+                listdictresults.append({"event_name":event_name, "repeats":len(times), "Time",avg_time})
+                                       
+        output = io.StringIO()
+        fieldnames = ['Event', 'Repeats', '(avg) Duration']
+        writer = csv.DictWriter(output, fieldnames=fieldnames)
+        writer.writeheader()
+    
+        for row in listdictresults:
+            writer.writerow(row)
+            
+        csv_string = output.getvalue()
+    
+        output.close()
 
+        return csv_string
 
     def __enter__(self):
         return self
