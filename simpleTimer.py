@@ -1,4 +1,4 @@
-import time
+import time, io, csv
 
 class Timer:
     def __init__(self):
@@ -10,6 +10,7 @@ class Timer:
     def start(self, event_name):
         self.start_times[event_name] = time.time()
         self.current_event_name = event_name
+        self.event_stack.append(event_name)
         return self
 
     def stop(self, event_name= None):
@@ -26,6 +27,15 @@ class Timer:
         
             
         self.stop_times[event_name] = time.time()
+    def lap(self, new_event_name):
+        # Stops the last started timer and starts a new one
+        self.stop()
+        return self.start(new_event_name)
+
+    def lap_looped(self, new_event_name):
+        # Stops the last started timer and starts a new one
+        self.stop_looped()
+        return self.start_looped(new_event_name)
         
     def start_looped(self, event_name):
         if event_name not in self.loop_times:
@@ -66,17 +76,18 @@ class Timer:
                 avg_time = sum(times) / len(times)
                 retval+=f'There were {len(times)} repeats of {event_name}, average duration was: {avg_time} seconds\n'
         return retval
-        def reportCSV(self):
+        
+    def reportCSV(self):
         listdictresults = []
         for event_name in self.start_times:
             elapsed_time = self.get_elapsed_time(event_name)
-            listdictresults.append({"event_name":event_name, "repeats":1, "Time",elapsed_time}
+            listdictresults.append({"event_name":event_name, "repeats":1, "Time":elapsed_time})
                 
         for event_name in self.loop_times:
             times = self.loop_times.get(event_name)
             if times:
                 avg_time = sum(times) / len(times)
-                listdictresults.append({"event_name":event_name, "repeats":len(times), "Time",avg_time})
+                listdictresults.append({"event_name":event_name, "repeats":len(times), "Time":avg_time})
                                        
         output = io.StringIO()
         fieldnames = ['Event', 'Repeats', '(avg) Duration']
@@ -84,7 +95,11 @@ class Timer:
         writer.writeheader()
     
         for row in listdictresults:
-            writer.writerow(row)
+            writer.writerow({
+                                'Event': row['event_name'], 
+                                'Repeats': row['repeats'], 
+                                '(avg) Duration': row['Time']
+                            })
             
         csv_string = output.getvalue()
     
